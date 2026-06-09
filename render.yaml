@@ -1,0 +1,20 @@
+# Configuration pour heberger la boutique sur Render.com (gratuit)
+# Render lit ce fichier automatiquement lors de la creation du service.
+services:
+  - type: web
+    name: ma-boutique
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /var/data
+    # Disque persistant : conserve la base de donnees et les photos
+    # meme apres un redemarrage du serveur.
+    disk:
+      name: boutique-data
+      mountPath: /var/data
+      sizeGB: 1
