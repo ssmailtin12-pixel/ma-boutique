@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ma Boutique / My Shop</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#ffffff; --ink:#1c2330; --muted:#6b7280;
+    --brand:#4f46e5; --brand2:#7c3aed; --ok:#16a34a; --warn:#d97706; --bad:#dc2626;
+    --line:#e5e7eb; --shadow:0 6px 24px rgba(20,30,60,.08);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);line-height:1.5;min-height:100vh;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(124,58,237,.10), transparent 42%),
+      radial-gradient(circle at 88% 12%, rgba(79,70,229,.12), transparent 40%),
+      radial-gradient(circle at 78% 82%, rgba(22,163,74,.07), transparent 45%),
+      radial-gradient(circle at 22% 88%, rgba(217,119,6,.06), transparent 42%),
+      linear-gradient(160deg,#eef1f8 0%,#f5f6fb 45%,#f0f2fa 100%);
+    background-attachment:fixed;}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:radial-gradient(rgba(79,70,229,.05) 1px,transparent 1px);background-size:22px 22px;}
+  a{color:inherit}
+  header{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;box-shadow:var(--shadow)}
+  .bar{max-width:1150px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:12px 18px;flex-wrap:wrap}
+  .logo{font-weight:800;font-size:1.25rem;display:flex;align-items:center;gap:8px;cursor:pointer}
+  .logo span{font-size:1.4rem}
+  .search{flex:1;min-width:160px;display:flex;background:#fff;border-radius:10px;overflow:hidden}
+  .search input{flex:1;border:0;padding:10px 12px;font-size:.95rem;outline:none}
+  .nav-btns{display:flex;gap:8px;align-items:center}
+  .btn{cursor:pointer;border:0;border-radius:10px;padding:9px 14px;font-weight:600;font-size:.9rem;
+    background:rgba(255,255,255,.18);color:#fff;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+  .btn:hover{background:rgba(255,255,255,.32)}
+  .btn.solid{background:#fff;color:var(--brand)}
+  .btn.primary{background:var(--brand);color:#fff}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .btn.ghost:hover{background:#f1f1f6}
+  .btn.danger{background:var(--bad);color:#fff}
+  .btn.small{padding:6px 10px;font-size:.8rem}
+  .cart-count{background:var(--warn);color:#fff;border-radius:999px;padding:1px 7px;font-size:.75rem;font-weight:700}
+  main{max-width:1150px;margin:22px auto;padding:0 18px}
+  .hero{position:relative;overflow:hidden;border-radius:20px;padding:34px 30px;margin-bottom:24px;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;color:#fff;
+    background:linear-gradient(120deg,#4f46e5 0%,#7c3aed 55%,#9333ea 100%);box-shadow:0 14px 40px rgba(79,70,229,.32)}
+  .hero::before{content:"";position:absolute;top:-60px;right:-40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 70%)}
+  .hero::after{content:"";position:absolute;bottom:-80px;left:-30px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%)}
+  .hero>*{position:relative;z-index:1}
+  .hero h1{margin:0 0 6px;font-size:1.7rem}
+  .hero p{margin:0;color:rgba(255,255,255,.85)}
+  .hero .btn.primary{background:#fff;color:var(--brand);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+  .hero .btn.primary:hover{filter:none;background:#f3f0ff}
+  .hero .btn.ghost{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.4)}
+  .hero .btn.ghost:hover{background:rgba(255,255,255,.3)}
+  .promo-section{margin-bottom:26px;padding:20px;border-radius:18px;background:linear-gradient(135deg,#fff4ed,#ffeef0);border:1px solid #fed7c3;box-shadow:0 8px 26px rgba(220,38,38,.10)}
+  .promo-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .promo-head h2{margin:0;font-size:1.45rem;background:linear-gradient(135deg,#dc2626,#f97316);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900}
+  .promo-sub{color:#b91c1c;font-weight:600;font-size:.9rem}
+  .cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .chip{cursor:pointer;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:.85rem;font-weight:600;transition:.15s}
+  .chip.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+  .product{background:rgba(255,255,255,.85);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.6);
+    border-radius:16px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
+  .product:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(20,30,60,.16)}
+  .pimg{height:160px;display:flex;align-items:center;justify-content:center;font-size:3.6rem;background:linear-gradient(135deg,#eef0ff,#f6edff);transition:.18s;overflow:hidden;position:relative}
+  .product:hover .pimg{font-size:3.9rem}
+  .pimg img,.pimg video{width:100%;height:100%;object-fit:cover;display:block}
+  .pimg .play-tag{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;border-radius:999px;padding:2px 8px;font-size:.7rem;font-weight:700}
+  .pbody{padding:13px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .pcat{font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--brand);font-weight:700}
+  .pname{font-weight:700;font-size:1rem}
+  .pdesc{font-size:.82rem;color:var(--muted);flex:1}
+  .prow{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+  .price{font-weight:800;font-size:1.12rem;color:var(--bad)}
+  .price.normal{color:var(--ink)}
+  .oldprice{font-size:.82rem;color:var(--muted);text-decoration:line-through;margin-right:6px;font-weight:600}
+  .stock{font-size:.74rem}
+  .in{color:var(--ok)} .low{color:var(--warn)} .out{color:var(--bad)}
+  .ptags{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:5px;z-index:2;align-items:flex-start}
+  .ptag{color:#fff;border-radius:8px;padding:3px 9px;font-size:.72rem;font-weight:800;box-shadow:0 3px 8px rgba(0,0,0,.18)}
+  .ptag.promo{background:linear-gradient(135deg,#dc2626,#f97316)}
+  .ptag.new{background:linear-gradient(135deg,#2563eb,#7c3aed)}
+  .ptag.top{background:linear-gradient(135deg,#16a34a,#0d9488)}
+  .empty{text-align:center;color:var(--muted);padding:50px 0}
+  .overlay{position:fixed;inset:0;background:rgba(15,20,40,.45);z-index:100;display:none}
+  .overlay.open{display:block}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:400px;max-width:92vw;background:var(--bg);z-index:101;transform:translateX(100%);transition:.25s;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+  .drawer.open{transform:translateX(0)}
+  .drawer header{position:static;background:var(--card);color:var(--ink);border-bottom:1px solid var(--line)}
+  .dhead{display:flex;justify-content:space-between;align-items:center;padding:16px 18px}
+  .dhead h3{margin:0}
+  .x{cursor:pointer;border:0;background:none;font-size:1.4rem;line-height:1;color:var(--muted)}
+  .dbody{flex:1;overflow:auto;padding:16px 18px}
+  .citem{background:var(--card);border-radius:12px;padding:12px;margin-bottom:10px;display:flex;gap:10px;align-items:center}
+  .citem .em{font-size:1.8rem}
+  .citem .em-media{width:46px;height:46px;object-fit:cover;border-radius:8px;display:block}
+  .citem .info{flex:1}
+  .qty{display:flex;align-items:center;gap:8px}
+  .qty button{width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700}
+  .dfoot{padding:16px 18px;background:var(--card);border-top:1px solid var(--line)}
+  .total{display:flex;justify-content:space-between;font-weight:800;font-size:1.15rem;margin-bottom:12px}
+  .modal{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:18px}
+  .modal.open{display:flex}
+  .modal .box{background:var(--card);border-radius:16px;max-width:560px;width:100%;max-height:90vh;overflow:auto;box-shadow:var(--shadow)}
+  .box .mh{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .box .mh h3{margin:0}
+  .mbody{padding:20px}
+  label{display:block;font-size:.82rem;font-weight:600;margin:10px 0 4px;color:var(--muted)}
+  input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:.92rem;font-family:inherit}
+  textarea{resize:vertical;min-height:60px}
+  .field2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .media-preview{display:flex;align-items:center;gap:12px;margin-top:10px;background:#f6f6fc;border:1px solid var(--line);border-radius:10px;padding:10px}
+  .media-preview #pf_mediaThumb img,.media-preview #pf_mediaThumb video{width:80px;height:80px;object-fit:cover;border-radius:8px;display:block}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:10px;z-index:200;opacity:0;transition:.25s;font-weight:600;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+  .tab{cursor:pointer;padding:9px 16px;border-radius:10px;font-weight:600;background:var(--card);border:1px solid var(--line)}
+  .tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+  .stat{background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+  .stat .n{font-size:1.7rem;font-weight:800}
+  .stat .l{font-size:.8rem;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);font-size:.88rem}
+  th{background:#fafafe;font-size:.76rem;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+  tr:last-child td{border-bottom:0}
+  .badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.74rem;font-weight:700}
+  .b-new{background:#fef3c7;color:#92400e}
+  .b-prep{background:#dbeafe;color:#1e40af}
+  .b-ship{background:#e0e7ff;color:#4338ca}
+  .b-done{background:#dcfce7;color:#166534}
+  .b-cancel{background:#fee2e2;color:#991b1b}
+  .hidden{display:none!important}
+  footer{text-align:center;color:var(--muted);padding:30px 18px;font-size:.82rem}
+  @media(max-width:560px){.field2{grid-template-columns:1fr}.bar{gap:8px}.logo span{font-size:1.1rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="logo" onclick="go('shop')"><span>🛍️</span> <span id="brandName">Ma Boutique</span></div>
+    <div class="search"><input id="searchInput" placeholder="Rechercher..." oninput="render()"></div>
+    <div class="nav-btns">
+      <button class="btn" onclick="toggleLang()" id="langBtn">EN</button>
+      <button class="btn" onclick="openCart()" id="cartBtn">🛒 <span class="cart-count" id="cartCount">0</span></button>
+      <button class="btn solid" onclick="adminGate()" id="adminBtn">⚙️ Admin</button>
+    </div>
+  </div>
+</header>
+
+<main id="shopView">
+  <div class="hero">
+    <div><h1 id="heroTitle">Bienvenue dans la boutique</h1><p id="heroSub">Parcourez nos produits et commandez en quelques clics.</p></div>
+    <button class="btn primary" onclick="openCart()" id="heroCta">Voir le panier 🛒</button>
+  </div>
+  <section id="promoSection" class="promo-section hidden">
+    <div class="promo-head"><h2 id="promoTitle">🔥 Promotions</h2><span class="promo-sub" id="promoSub">Profitez-en, offres limitées !</span></div>
+    <div class="grid" id="promoGrid"></div>
+  </section>
+  <div class="cats" id="cats"></div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<main id="adminView" class="hidden">
+  <div class="hero">
+    <div><h1 id="adminTitle">Panneau d'administration</h1><p id="adminSub">Gérez vos produits, commandes et stocks.</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn ghost" onclick="go('shop')" id="backShop">← Retour à la boutique</button>
+      <button class="btn danger" onclick="adminLogout()" id="logoutBtn">🔒 Déconnexion</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-tab="dash" onclick="adminTab('dash')" id="tabDash">📊 Tableau de bord</div>
+    <div class="tab" data-tab="prod" onclick="adminTab('prod')" id="tabProd">📦 Produits</div>
+    <div class="tab" data-tab="ord" onclick="adminTab('ord')" id="tabOrd">🧾 Commandes</div>
+    <div class="tab" data-tab="set" onclick="adminTab('set')" id="tabSet">🔧 Réglages</div>
+  </div>
+  <section id="paneDash"><div class="stats" id="statsBox"></div><h3 id="bestTitle">Articles vendus</h3><div style="overflow:auto"><table id="bestTable"></table></div><h3 id="recentTitle" style="margin-top:24px">Commandes récentes</h3><div id="recentOrders"></div></section>
+  <section id="paneProd" class="hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px;flex-wrap:wrap">
+      <h3 id="prodMgrTitle" style="margin:0">Liste des produits</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn danger" onclick="deleteAllProducts()" id="delAllBtn">🗑️ Tout supprimer</button>
+        <button class="btn primary" onclick="openProductForm()" id="addProdBtn">+ Ajouter un produit</button>
+      </div>
+    </div>
+    <div style="overflow:auto"><table id="prodTable"></table></div>
+  </section>
+  <section id="paneOrd" class="hidden"><div style="overflow:auto"><table id="ordTable"></table></div></section>
+  <section id="paneSet" class="hidden">
+    <div class="stat" style="max-width:520px">
+      <label id="lblShopName">Nom de la boutique</label><input id="setShopName">
+      <label id="lblCurrency">Devise (symbole)</label><input id="setCurrency" style="max-width:120px">
+      <div class="field2">
+        <div><label id="lblDelHome">Frais livraison à domicile</label><input id="setDelHome" type="number" min="0"></div>
+        <div><label id="lblDelDesk">Frais Stop Desk</label><input id="setDelDesk" type="number" min="0"></div>
+      </div>
+      <label id="lblCancelDelay">⏱️ Suppression auto des commandes annulées</label>
+      <select id="setCancelDelay"><option value="12">12 h</option><option value="24">24 h</option><option value="48">48 h</option></select>
+      <div style="border-top:1px solid var(--line);margin:18px 0 4px;padding-top:14px">
+        <label id="lblChangePw" style="font-weight:700;color:var(--ink)">🔐 Changer le mot de passe admin</label>
+        <input id="setOldPw" type="password" autocomplete="current-password" placeholder="Mot de passe actuel" style="margin-bottom:8px">
+        <input id="setNewPw" type="password" autocomplete="new-password" placeholder="Nouveau mot de passe" style="margin-bottom:8px">
+        <input id="setNewPw2" type="password" autocomplete="new-password" placeholder="Confirmer le nouveau">
+        <button class="btn ghost small" style="margin-top:8px" onclick="changePassword()" id="changePwBtn">Mettre à jour le mot de passe</button>
+      </div>
+      <div style="margin-top:16px"><button class="btn primary" onclick="saveSettings()" id="saveSetBtn">Enregistrer les réglages</button></div>
+    </div>
+  </section>
+</main>
+
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<aside class="drawer" id="cartDrawer">
+  <header><div class="dhead"><h3 id="cartTitle">Votre panier</h3><button class="x" onclick="closeAll()">×</button></div></header>
+  <div class="dbody" id="cartBody"></div>
+  <div class="dfoot"><div class="total"><span id="totalLbl">Total</span><span id="cartTotal">0</span></div><button class="btn primary" style="width:100%" onclick="openCheckout()" id="checkoutBtn">Commander</button></div>
+</aside>
+
+<div class="modal" id="prodModal"><div class="box">
+  <div class="mh"><h3 id="prodFormTitle">Ajouter un produit</h3><button class="x" onclick="closeAll()">×</button></div>
+  <div class="mbody">
+    <input type="hidden" id="pf_id">
+    <label id="lblPName">Nom du produit</label><input id="pf_name">
+    <label id="lblPDesc">Description</label><textarea id="pf_desc"></textarea>
+    <div class="field2"><div><label id="lblPCat">Catégorie</label><input id="pf_cat"></div><div><label id="lblPEmoji">Icône (emoji)</label><input id="pf_emoji" maxlength="4" placeholder="📦"></div></div>
+    <label id="lblPMedia">Photo ou vidéo du produit</label>
+    <input type="file" id="pf_mediaFile" accept="image/*,video/*" onchange="handleMediaUpload(event)">
+    <div id="pf_mediaPreview" class="media-preview hidden"><div id="pf_mediaThumb"></div><button type="button" class="btn danger small" onclick="removeMedia()" id="removeMediaBtn">🗑️ Retirer</button></div>
+    <input type="hidden" id="pf_media"><input type="hidden" id="pf_mediaType">
+    <div class="field2"><div><label id="lblPPrice">Prix</label><input id="pf_price" type="number" step="0.01" min="0"></div><div><label id="lblPStock">Stock</label><input id="pf_stock" type="number" min="0"></div></div>
+    <div class="field2"><div><label id="lblPOldPrice">Ancien prix (promo)</label><input id="pf_oldPrice" type="number" step="0.01" min="0" placeholder="0 = aucune promo"></div>
+    <div style="display:flex;gap:14px;align-items:flex-end;padding-bottom:6px"><label style="display:flex;align-items:center;gap:5px;font-weight:600;margin:0;cursor:pointer"><input type="checkbox" id="pf_isNew" style="width:auto"> <span id="lblPIsNew">Nouveau</span></label><label style="display:flex;align-items:center;gap:5px;font-weight:600;margin:0;cursor:pointer"><input type="checkbox" id="pf_isTop" style="width:auto"> <span id="lblPIsTop">Top vente</span></label></div></div>
+    <div style="display:flex;gap:8px;margin-top:18px"><button class="btn primary" onclick="saveProduct()" id="saveProdBtn">Enregistrer</button><button class="btn ghost" onclick="closeAll()" id="cancelProdBtn">Annuler</button></div>
+  </div>
+</div></div>
+
+<div class="modal" id="checkoutModal"><div class="box">
+  <div class="mh"><h3 id="coTitle">Finaliser la commande</h3><button class="x" onclick="closeAll()">×</button></div>
+  <div class="mbody">
+    <label id="lblCName">Nom complet</label><input id="co_name">
+    <div class="field2"><div><label id="lblCEmail">Email</label><input id="co_email" type="email"></div><div><label id="lblCPhone">Téléphone</label><input id="co_phone"></div></div>
+    <div class="field2"><div><label id="lblCWilaya">Wilaya</label><select id="co_wilaya" onchange="updateCoTotal()"></select></div><div><label id="lblCCommune">Commune</label><input id="co_commune"></div></div>
+    <label id="lblCDelivery">Type de livraison</label>
+    <select id="co_delivery" onchange="updateCoTotal()"><option value="home">Livraison à domicile / Home delivery</option><option value="desk">Point de retrait (Stop Desk) / Pickup point</option></select>
+    <label id="lblCAddr">Adresse de livraison</label><textarea id="co_addr"></textarea>
+    <label id="lblCPay">Mode de paiement</label>
+    <select id="co_pay"><option value="cod">Paiement à la livraison / Cash on delivery</option><option value="baridimob">BaridiMob / Edahabia (CCP)</option><option value="ccp">Versement CCP / Baridi</option><option value="cib">Carte CIB / Dahabia (simulation)</option></select>
+    <div style="margin-top:14px;font-size:.9rem">
+      <div style="display:flex;justify-content:space-between"><span id="coSubLbl">Sous-total</span><span id="coSub">0</span></div>
+      <div style="display:flex;justify-content:space-between;color:var(--muted)"><span id="coShipLbl">Frais de livraison</span><span id="coShip">0</span></div>
+    </div>
+    <div class="total" style="margin-top:8px"><span id="coTotalLbl">Total à payer</span><span id="coTotal">0</span></div>
+    <button class="btn primary" style="width:100%" onclick="placeOrder()" id="confirmOrderBtn">Confirmer la commande</button>
+  </div>
+</div></div>
+
+<div class="modal" id="pinModal"><div class="box" style="max-width:380px">
+  <div class="mh"><h3 id="pinTitle">Accès administrateur</h3><button class="x" onclick="closeAll()">×</button></div>
+  <div class="mbody">
+    <div id="authSetup" class="hidden">
+      <div style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:10px 12px;font-size:.82rem;margin-bottom:12px" id="setupNote">🔐 Premier lancement : créez votre compte administrateur.</div>
+      <label id="lblNewUser">Nom d'utilisateur</label><input id="authNewUser" autocomplete="username">
+      <label id="lblNewPw">Mot de passe</label><input id="authNewPw" type="password" autocomplete="new-password">
+      <label id="lblNewPw2">Confirmer le mot de passe</label><input id="authNewPw2" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')createAccount()">
+      <p style="font-size:.76rem;color:var(--muted)" id="pwTip">Conseil : au moins 8 caractères, avec chiffres et lettres.</p>
+      <button class="btn primary" style="width:100%" onclick="createAccount()" id="createPwBtn">Créer mon accès sécurisé</button>
+    </div>
+    <div id="authLogin">
+      <label id="lblLoginUser">Nom d'utilisateur</label><input id="loginUser" autocomplete="username">
+      <label id="lblPin2">Mot de passe administrateur</label>
+      <input id="pinInput" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <p style="font-size:.78rem;color:var(--bad);min-height:18px" id="authMsg"></p>
+      <button class="btn primary" style="width:100%" onclick="doLogin()" id="pinBtn">Entrer</button>
+    </div>
+  </div>
+</div></div>
+
+<div class="modal" id="confirmModal"><div class="box" style="max-width:380px">
+  <div class="mh"><h3 id="confirmTitle">Confirmation</h3><button class="x" onclick="closeConfirm()">×</button></div>
+  <div class="mbody"><p id="confirmMsg" style="margin:0 0 18px"></p>
+    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" onclick="closeConfirm()" id="confirmNo">Annuler</button><button class="btn danger" onclick="confirmYes()" id="confirmYesBtn">Confirmer</button></div>
+  </div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
